@@ -1,0 +1,6 @@
+C:\Users\Carolina del\Desktop\ProgramacionGrafica - con luces\proyectos\clienteBattleship\clienteBattleship\bin\Debug\clienteBattleship.exe.config
+C:\Users\Carolina del\Desktop\ProgramacionGrafica - con luces\proyectos\clienteBattleship\clienteBattleship\bin\Debug\clienteBattleship.exe
+C:\Users\Carolina del\Desktop\ProgramacionGrafica - con luces\proyectos\clienteBattleship\clienteBattleship\bin\Debug\clienteBattleship.pdb
+C:\Users\Carolina del\Desktop\ProgramacionGrafica - con luces\proyectos\clienteBattleship\clienteBattleship\obj\Debug\clienteBattleship.csprojResolveAssemblyReference.cache
+C:\Users\Carolina del\Desktop\ProgramacionGrafica - con luces\proyectos\clienteBattleship\clienteBattleship\obj\Debug\clienteBattleship.exe
+C:\Users\Carolina del\Desktop\ProgramacionGrafica - con luces\proyectos\clienteBattleship\clienteBattleship\obj\Debug\clienteBattleship.pdb

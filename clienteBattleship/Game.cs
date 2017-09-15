@@ -13,6 +13,7 @@ namespace clienteBattleship
         public bool[,] enemyShots;
         public int [] shipSizes;
         public int[] shipHits;
+        public int hitsLeft, enemyHitsLeft;
         public int shipNumber;
         public int width, height;
 
@@ -26,6 +27,12 @@ namespace clienteBattleship
             shipSizes = ships;
             shipNumber = ships.Length;
             shipHits = new int[shipNumber];
+
+            for (int i = 0; i < shipNumber; i++)
+            {
+                hitsLeft += ships[i];
+            }
+            enemyHitsLeft = hitsLeft;
 
             obtainGameArea();
 
@@ -207,6 +214,7 @@ namespace clienteBattleship
                             int ship = gameArea[row, column];
                             shipHits[ship]++;
                             enemyShots[row, column] = true;
+                            hitsLeft--;
 
                             return true;
                         } else
@@ -251,6 +259,8 @@ namespace clienteBattleship
                         throw new Exception("Entrada no valida");
                     }
                     int row = Int32.Parse(parts[0]), column = Int32.Parse(parts[1]);
+                    row--;
+                    column--;
                     if (row < 0 || column < 0 || row >= height || column >= width)
                     {
                         throw new Exception("Entrada no valida");
@@ -270,14 +280,31 @@ namespace clienteBattleship
             }
         }
 
+        public void successfulShot()
+        {
+            enemyHitsLeft--;
+        }
+
+        public bool isGameOver()
+        {
+            return hitsLeft <= 0;
+        }
+
+        public bool isVictory()
+        {
+            return enemyHitsLeft <= 0;
+        }
+
         public void gameOver()
         {
             Console.WriteLine("Usted ha perdido");
+            Console.ReadLine();
         }
 
         public void victory()
         {
             Console.WriteLine("Usted ha ganado");
+            Console.ReadLine();
         }
         
     }

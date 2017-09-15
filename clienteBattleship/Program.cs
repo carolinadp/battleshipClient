@@ -10,12 +10,11 @@ namespace clienteBattleship
 {
     class Program
     {
+        public static int[] ships;
+        public static int height, width;
+        public static int player;
         static void Main(string[] args)
         {
-
-            int[] ships = { 5, 4, 3, 3, 2 };
-            Game myGame = new Game(10, 10, ships);
-
             TcpClient client = null;
             try
             {
@@ -23,7 +22,8 @@ namespace clienteBattleship
             }
             catch (Exception ex)
             {
-                Console.WriteLine("No se pudo conectar al cliente adios");
+                Console.WriteLine("No se pudo conectar al servidor adios");
+                Console.ReadLine();
                 return;
             }
 
@@ -33,13 +33,80 @@ namespace clienteBattleship
 
             try
             {
-                writer.WriteLine("hola");
-                writer.Flush();
+                Console.WriteLine("Esperando respuesta del servidor");
 
-                Console.WriteLine("Dijo" + reader.ReadLine());
+                // Lee los tamaños de los barcos
+                String line = reader.ReadLine();
+                String []parts = line.Split(' ');
+                ships = new int[parts.Length];
+                for (int i=0;i<parts.Length; i++)
+                {
+                    ships[i] = Int32.Parse(parts[i]);
+                }
+                
+                // Lee las dimensiones del barco
+                line = reader.ReadLine();
+                parts = line.Split(' ');
 
-                writer.WriteLine("adios");
-                writer.Flush();
+                width = Int32.Parse(parts[0]);
+                height = Int32.Parse(parts[1]);
+
+                // Lee que jugador somos
+                line = reader.ReadLine();
+                player = Int32.Parse(line);
+
+                Game myGame = new Game(width, height, ships);
+
+                int turn = player;
+
+                while (!myGame.isGameOver() && !myGame.isVictory() && client.Connected)
+                {
+                    if (turn % 2 == 0) // tu turno
+                    {
+                        Coordinate c = myGame.obtainMyShot();
+                        line = c.ToString();
+                        writer.WriteLine(line);
+                        writer.Flush();
+                        Console.WriteLine("Esperando la respuesta del otro jugador.");
+                        line = reader.ReadLine();
+                        if (line.CompareTo("Hit") == 0)
+                        {
+                            Console.WriteLine("Tu tiro fue exitoso");
+                            myGame.successfulShot();
+                        } else
+                        {
+                            Console.WriteLine("Tu tiro falló");
+                        }
+                    } else // otro turno
+                    {
+                        Console.WriteLine("Esperando la respuesta del otro jugador.");
+                        line = reader.ReadLine();
+                        parts = line.Split(' ');
+                        int row = Int32.Parse(parts[0]), column = Int32.Parse(parts[1]);
+                        Console.WriteLine("Recibiste un tiro en la posición {0},{1}", row + 1, column + 1);
+                        if (myGame.enemyShot(row, column))
+                        {
+                            Console.WriteLine("El tiro fue exitoso");
+                            writer.WriteLine("Hit");
+                        } else
+                        {
+                            Console.WriteLine("El tiro fallo");
+                            writer.WriteLine("Miss");
+                        }
+                        writer.Flush();
+                    }
+                    turn++;
+                }
+                if (myGame.isGameOver())
+                {
+                    myGame.gameOver();
+                } else if (myGame.isVictory())
+                {
+                    myGame.victory();
+                } else
+                {
+                    Console.WriteLine("Se ha desconectado del servidor");
+                }
             }
             catch(Exception ex)
             {

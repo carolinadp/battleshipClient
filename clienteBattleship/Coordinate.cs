@@ -36,5 +36,10 @@ namespace clienteBattleship
                 row = value;
             }
         }
+
+        override public String ToString()
+        {
+            return row.ToString() + " " + column.ToString();
+        }
     }
 }
